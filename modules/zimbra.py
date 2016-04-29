@@ -43,7 +43,11 @@ try:
     ldap_master_url = get_localconfig('ldap_master_url')
     ldap_bind_dn = get_localconfig('zimbra_ldap_userdn')
     ldap_bind_password = get_localconfig('zimbra_ldap_password')
+    ldap_starttls_supported = get_localconfig('ldap_starttls_supported')
+    ldap_starttls_required = get_localconfig('zimbra_require_interprocess_security')
     l = PagedLDAPObject(ldap_master_url)
+    if ldap_starttls_supported == "1" and ldap_starttls_required == "1":
+        l.start_tls_s()
     l.simple_bind_s(ldap_bind_dn, ldap_bind_password)
     ldap_success = True
 except:
