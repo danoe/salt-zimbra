@@ -46,6 +46,10 @@ try:
     ldap_starttls_supported = get_localconfig('ldap_starttls_supported')
     ldap_starttls_required = get_localconfig('zimbra_require_interprocess_security')
     l = PagedLDAPObject(ldap_master_url)
+    l.set_option(ldap.OPT_X_TLS_CACERTDIR, '/opt/zimbra/conf/ca')
+    # force the creation of a new TLS context. This must be the last TLS option.
+    # see: http://stackoverflow.com/a/27713355/298479
+    l.set_option(ldap.OPT_X_TLS_NEWCTX, 0)
     if ldap_starttls_supported == "1" and ldap_starttls_required == "1":
         l.start_tls_s()
     l.simple_bind_s(ldap_bind_dn, ldap_bind_password)
